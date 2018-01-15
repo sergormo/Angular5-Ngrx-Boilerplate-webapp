@@ -1,50 +1,37 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpModule } from '@angular/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-//NGRX
-import { StoreModule, ActionReducer, combineReducers } from '@ngrx/store';
-import { EffectsModule } from "@ngrx/effects";
-import { StoreRouterConnectingModule } from "@ngrx/router-store";
+// NGRX
+import { StoreModule, MetaReducer } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { reducers } from './state/reducers/reducer';
 
-//components
+// components
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { TopbarComponent } from './topbar/topbar.component';
-import { CoinComponent } from './coin/coin.component';
 
-//services
-import { BaseService } from './services/base.service';
+// development
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { storeFreeze } from 'ngrx-store-freeze';
+import { environment } from '../environments/environment';
 
-//directives
-import { MdlDirective } from './directives/mdl.directive';
-
-import { coinItem, appReducer, initialState, State } from "./state/model";
-import { CoinEffects } from "./state/effects";
-
-//NEW
+export const metaReducers: MetaReducer<any>[] = !environment.production
+  ? [storeFreeze]
+  : [];
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponent,
-    TopbarComponent,
-    CoinComponent,
-    MdlDirective
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpModule,
-    StoreModule.forRoot({app: appReducer}, {initialState}),
-    EffectsModule.forRoot([CoinEffects]),
-    StoreRouterConnectingModule
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([]),
   ],
-  providers: [
-    BaseService,
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
-
 export class AppModule { }
+
